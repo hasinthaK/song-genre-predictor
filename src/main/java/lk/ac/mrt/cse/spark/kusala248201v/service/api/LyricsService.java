@@ -1,11 +1,11 @@
 package lk.ac.mrt.cse.spark.kusala248201v.service.api;
 
-import jakarta.annotation.Resource;
 import lk.ac.mrt.cse.spark.kusala248201v.dto.response.GenrePrediction;
 import lk.ac.mrt.cse.spark.kusala248201v.service.common.LyricsPipeline;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 @Component
