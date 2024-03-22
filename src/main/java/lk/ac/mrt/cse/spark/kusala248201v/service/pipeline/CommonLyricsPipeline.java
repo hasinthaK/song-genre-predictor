@@ -67,8 +67,12 @@ public abstract class CommonLyricsPipeline implements LyricsPipeline {
     }
 
     public Dataset<Row> readLyrics() {
-        Dataset input = readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.METAL)
-                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.POP));
+        Dataset input = readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.POP)
+                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.BLUES))
+                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.JAZZ))
+                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.COUNTRY))
+                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.REGGAE))
+                .union(readLyricsForGenre(lyricsTrainingSetDirectoryPath, Genre.HIPHOP));
         // Reduce the input amount of partition minimal amount (spark.default.parallelism OR 2, whatever is less)
         input = input.coalesce(sparkSession.sparkContext().defaultMinPartitions()).cache();
         // Force caching.
@@ -78,7 +82,7 @@ public abstract class CommonLyricsPipeline implements LyricsPipeline {
     }
 
     private Dataset<Row> readLyricsForGenre(String inputDirectory, Genre genre) {
-        Dataset<Row> lyrics = readLyrics(inputDirectory, genre.name().toLowerCase() + "/*");
+        Dataset<Row> lyrics = readLyrics(inputDirectory, genre.name().toLowerCase() + ".csv");
         Dataset<Row> labeledLyrics = lyrics.withColumn(LABEL.getName(), functions.lit(genre.getValue()));
 
         System.out.println(genre.name() + " music sentences = " + lyrics.count());
@@ -87,7 +91,8 @@ public abstract class CommonLyricsPipeline implements LyricsPipeline {
     }
 
     private Dataset<Row> readLyrics(String inputDirectory, String path) {
-        Dataset<String> rawLyrics = sparkSession.read().textFile(Paths.get(inputDirectory).resolve(path).toString());
+        String filePath = Paths.get(inputDirectory).resolve(path).toString();
+        Dataset<Row> rawLyrics = sparkSession.read().csv(filePath);
         rawLyrics = rawLyrics.filter(rawLyrics.col(VALUE.getName()).notEqual(""));
         rawLyrics = rawLyrics.filter(rawLyrics.col(VALUE.getName()).contains(" "));
 

@@ -2,9 +2,19 @@ package lk.ac.mrt.cse.spark.kusala248201v.constant;
 
 public enum Genre {
 
-    METAL("Metal \\m//", 0D),
+    POP("Pop", 1D),
 
-    POP("Pop <(^.^)/", 1D),
+    BLUES("Blues", 2D),
+
+    COUNTRY("Country", 3D),
+
+    JAZZ("Jazz", 4D),
+
+    HIPHOP("Hip Hop", 5D),
+
+    REGGAE("Reggae", 6D),
+
+    ROCK("Rock", 7D),
 
     UNKNOWN("Don\'t know :(", -1D);
 
